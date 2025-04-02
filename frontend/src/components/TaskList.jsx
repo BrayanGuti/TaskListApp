@@ -129,12 +129,13 @@ const TaskList = () => {
                                 </span>
                                 <div className="task-buttons">
                                     <button 
-                                        className="complete-btn"
-                                        onClick={() => handleComplete(task.id)}
-                                        title={task.completed ? "Marcar como pendiente" : "Marcar como completada"}
-                                    >
-                                        {task.completed ? '↩️' : '✅'}
-                                    </button>
+                                     className="complete-btn"
+                                     onClick={() => handleComplete(task.id)}
+                                     title="Marcar como completada"
+                                     disabled={task.completed} // Deshabilita el botón si ya está completada
+                                 >
+                                     ✅
+                                 </button>
                                     <button 
                                         className="edit-btn"
                                         onClick={() => handleEdit(task)}

@@ -17,6 +17,7 @@ const addTask = (req, res) => {
     db.run('INSERT INTO tasks (title) VALUES (?)', [title], function (err) {
         if (err) return res.status(500).json({ error: err.message });
         res.json({ id: this.lastID, title, completed: 0 });
+        console.log('Task added with ID:', this.lastID); // Mueve esta línea dentro de la función
     });
 };
 
@@ -38,4 +39,24 @@ const deleteTask = (req, res) => {
     });
 };
 
-module.exports = { getTasks, addTask, completeTask, deleteTask };
+// Editar una tarea
+const editTask = (req, res) => {
+    const { id } = req.params;
+    console.log(id)
+    const { title } = req.body;
+    
+    if (!title) return res.status(400).json({ error: 'Title is required' });
+    
+    db.run('UPDATE tasks SET title = ? WHERE id = ?', [title, id], function (err) {
+        if (err) return res.status(500).json({ error: err.message });
+        
+        // Return the updated task
+        db.get('SELECT * FROM tasks WHERE id = ?', [id], (err, row) => {
+            if (err) return res.status(500).json({ error: err.message });
+            if (!row) return res.status(404).json({ error: 'Task not found' });
+            res.json(row);
+        });
+    });
+};
+
+module.exports = { getTasks, addTask, completeTask, deleteTask, editTask };
