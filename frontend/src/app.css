@@ -1,0 +1,61 @@
+.app-container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .app-title {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.5rem;
+    font-weight: 700;
+    padding-bottom: 15px;
+    border-bottom: 3px solid #3498db;
+  }
+  
+  .app-subtitle {
+    color: #7f8c8d;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+  }
+  
+  
+  .component-divider {
+    margin: 25px 0;
+    border: none;
+    height: 1px;
+    background-color: #ecf0f1;
+  }
+  
+
+  @media (max-width: 768px) {
+    .app-container {
+      margin: 20px 15px;
+      padding: 20px;
+    }
+    
+    .app-title {
+      font-size: 2rem;
+    }
+  }
+  
+
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .app-container {
+    animation: fadeInDown 0.5s ease-out;
+  }

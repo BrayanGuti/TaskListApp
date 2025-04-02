@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { addTask } from '../api';
+import './TaskForm.css';
 
 const TaskForm = ({ onTaskAdded }) => {
     const [title, setTitle] = useState('');
@@ -7,20 +8,36 @@ const TaskForm = ({ onTaskAdded }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!title.trim()) return;
-        await addTask(title);
-        setTitle('');
-        onTaskAdded();
+        
+        try {
+            await addTask(title);
+            setTitle('');
+            onTaskAdded();
+        } catch (error) {
+            console.error('Error al añadir tarea:', error);
+            alert('No se pudo añadir la tarea. Inténtalo de nuevo.');
+        }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form className="task-form" onSubmit={handleSubmit}>
             <input 
                 type="text" 
-                placeholder="Nueva tarea..." 
+                className="task-input"
+                id="new-task"
+                name="new-task"
+                placeholder="Añadir nueva tarea..." 
                 value={title} 
                 onChange={(e) => setTitle(e.target.value)} 
+                autoComplete="off"
             />
-            <button type="submit">Agregar</button>
+            <button 
+                type="submit" 
+                className="add-btn"
+                disabled={!title.trim()}
+            >
+                Agregar
+            </button>
         </form>
     );
 };
