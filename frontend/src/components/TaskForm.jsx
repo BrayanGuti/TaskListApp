@@ -8,9 +8,11 @@ const TaskForm = ({ onTaskAdded }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!title.trim()) return;
-        
+
         try {
-            await addTask(title);
+            const newTask = await addTask(title);
+            const storedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            localStorage.setItem('tasks', JSON.stringify([...storedTasks, newTask]));
             setTitle('');
             onTaskAdded();
         } catch (error) {

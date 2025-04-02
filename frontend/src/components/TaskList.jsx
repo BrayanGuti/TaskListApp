@@ -6,15 +6,29 @@ const TaskList = () => {
     const [tasks, setTasks] = useState([]);
     const [editingTaskId, setEditingTaskId] = useState(null);
     const [editingText, setEditingText] = useState('');
-    const [filter, setFilter] = useState('all'); // new state for filtering
+    const [filter, setFilter] = useState('all');
 
+    // Load tasks from LocalStorage on mount
     useEffect(() => {
+        const storedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        console.log('TASKS RECUPERADAS DEL LOCALSTORAGE:', storedTasks);
+        setTasks(storedTasks);
         fetchTasks();
     }, []);
 
+    // Save tasks to LocalStorage whenever they change
+    useEffect(() => {
+        console.log('Tasks updated:', tasks);
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+    }, [tasks]);
+
     const fetchTasks = async () => {
-        const data = await getTasks();
-        setTasks(data);
+        try {
+            const data = await getTasks();
+            setTasks(data);
+        } catch (error) {
+            console.error('Error fetching tasks:', error);
+        }
     };
 
     const handleComplete = async (id) => {
@@ -34,14 +48,14 @@ const TaskList = () => {
 
     const handleSaveEdit = async () => {
         if (editingText.trim() === '') return;
-        
+
         try {
             await editTask(editingTaskId, editingText);
             setEditingTaskId(null);
             setEditingText('');
             fetchTasks();
         } catch (error) {
-            console.error('Error al guardar cambios:', error);
+            console.error('Error saving task:', error);
             alert('No se pudo guardar la tarea. Intente de nuevo.');
         }
     };
@@ -58,8 +72,7 @@ const TaskList = () => {
             handleCancelEdit();
         }
     };
-    
-    // Filtrar las tareas según el filtro actual
+
     const filteredTasks = tasks.filter(task => {
         if (filter === 'all') return true;
         if (filter === 'active') return !task.completed;
@@ -129,13 +142,12 @@ const TaskList = () => {
                                 </span>
                                 <div className="task-buttons">
                                     <button 
-                                     className="complete-btn"
-                                     onClick={() => handleComplete(task.id)}
-                                     title="Marcar como completada"
-                                     disabled={task.completed} // Deshabilita el botón si ya está completada
-                                 >
-                                     ✅
-                                 </button>
+                                        className="complete-btn"
+                                        onClick={() => handleComplete(task.id)}
+                                        title={task.completed ? "Marcar como pendiente" : "Marcar como completada"}
+                                    >
+                                        {task.completed ? '↩️' : '✅'}
+                                    </button>
                                     <button 
                                         className="edit-btn"
                                         onClick={() => handleEdit(task)}
